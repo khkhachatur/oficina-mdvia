@@ -15,7 +15,8 @@ export const translations = {
     about: {
       title: "About Us",
       years: "Years On Market",
-      parts: "Parts Import From All Around The World",
+      parts: "Parts Import From All Around The",
+      world: "World",
       clients: "Satisfied Clients",
     },
     services: {
@@ -57,7 +58,8 @@ export const translations = {
     about: {
       title: "Sobre Nós",
       years: "Anos no Mercado",
-      parts: "Importação de Peças de Todo o Mundo",
+      parts: "Importação de Peças de Todo o",
+      world: "Mundo",
       clients: "Clientes Satisfeitos",
     },
     services: {
