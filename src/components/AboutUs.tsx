@@ -3,7 +3,7 @@ import Titles from "./Titles";
 const AboutUs = ({ t }: { t: any }) => {
   return (
     <section id="about" className="relative z-10 py-20 px-4 max-w-[1120px] mx-auto">
-        <Titles title={t.title} />
+        <Titles title={t?.title || "About Us"} />
         
         <div className="flex flex-col gap-10">
           
@@ -14,7 +14,7 @@ const AboutUs = ({ t }: { t: any }) => {
                  10+
                </h3>
                <p className="text-gray-300 text-lg md:text-xl font-medium">
-                 {t.years}
+                 {t?.years || "Years On Market"}
                </p>
              </div>
 
@@ -41,7 +41,7 @@ const AboutUs = ({ t }: { t: any }) => {
 
                  <div className="absolute top-1/2 -translate-y-1/2 right-8 md:right-12 z-20 text-right max-w-[180px]">
                    <p className="text-xl md:text-2xl font-bold leading-tight uppercase bg-gradient-to-b from-white to-zinc-500 bg-clip-text text-transparent">
-                     {t.parts}
+                     {t.parts || "Parts Import From All Around The"}
                    </p>
                    <h3 className="text-4xl md:text-4xl uppercase font-bold mb-2 bg-gradient-to-b from-white to-zinc-500 bg-clip-text text-transparent">
                   {t.world}
@@ -63,7 +63,7 @@ const AboutUs = ({ t }: { t: any }) => {
                    <h3 className="text-5xl font-bold mb-1 bg-gradient-to-b from-white to-zinc-500 bg-clip-text text-transparent">
                      10K+
                    </h3>
-                   <p className="text-gray-300 text-lg font-medium">{t.clients}</p>
+                   <p className="text-gray-300 text-lg font-medium">{t.clients || "Happy Clients"}</p>
                  </div>
             </div>
 

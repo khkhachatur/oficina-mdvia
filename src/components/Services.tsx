@@ -45,13 +45,13 @@ const Services = ({ t }: { t: any }) => {
     <section ref={componentRef} id="services" className="relative z-10 bg-black">
 
       <div ref={triggerRef} className="relative z-10 py-20 px-4 max-w-[1120px] mx-auto">
-             <Titles title={t.title} />
+             <Titles title={t?.services || "Services"} />
         <div className="relative w-full max-w-6xl h-[60vh] mt-20">
 
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[55vw] h-[65vh] bg-amber-500/20 blur-[120px] rounded-full mix-blend-screen" />
             <div className="service-frame absolute inset-0 flex flex-col items-center justify-center">
                 <h3 className="text-4xl md:text-6xl font-black text-amber-400 uppercase tracking-tighter mb-8 drop-shadow-lg text-center">
-                    {t.wash}
+                    {t?.wash || "Car Wash"}
                 </h3>
                 <img 
                     src="/images/911-1.png" 
@@ -62,7 +62,7 @@ const Services = ({ t }: { t: any }) => {
 
             <div className="service-frame absolute inset-0 flex flex-col items-center justify-center">
                 <h3 className="text-4xl md:text-6xl font-black text-amber-400 uppercase tracking-tighter mb-8 drop-shadow-lg text-center">
-                    {t.detailing}
+                    {t?.detailing || "Detailing"}
                 </h3>
                 <img 
                     src="/images/911-2.png" 
@@ -73,7 +73,7 @@ const Services = ({ t }: { t: any }) => {
 
             <div className="service-frame absolute inset-0 flex flex-col items-center justify-center">
                 <h3 className="text-4xl md:text-6xl font-black text-amber-400 uppercase tracking-tighter mb-8 drop-shadow-lg text-center">
-                    {t.painting}
+                    {t?.painting || "Painting"}
                 </h3>
                 <img 
                     src="/images/911-3.png" 
