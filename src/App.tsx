@@ -16,13 +16,7 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-amber-500 selection:text-black">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-amber-500/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-0 right-0 w-[600px] h-[400px] bg-blue-900/10 blur-[100px] rounded-full" />
-      </div>
-
-      {/* Pass text (t) and toggle function to components */}
+    <div className="min-h-screen bg-black text-white font-sans ">
       <Navbar t={t.nav} currentLang={lang} onToggleLang={toggleLang} />
       <Hero t={t.hero} />
       <AboutUs t={t.about} />

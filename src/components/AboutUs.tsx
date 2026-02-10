@@ -7,7 +7,7 @@ const AboutUs = ({ t }: { t: any }) => {
         
         <div className="flex flex-col gap-10">
           
-          <div className="group relative w-full h-[350px] md:h-[400px] rounded-2xl bg-zinc-900/50 border border-white/10 overflow-hidden">
+          <div className="group relative w-full h-[350px] md:h-[400px] rounded-2xl glass-panel overflow-hidden">
              
              <div className="absolute top-1/2 -translate-y-1/2 left-8 md:left-16 z-20 text-left">
                <h3 className="text-6xl md:text-8xl font-bold mb-2 bg-gradient-to-b from-white to-zinc-500 bg-clip-text text-transparent">
@@ -29,7 +29,7 @@ const AboutUs = ({ t }: { t: any }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             
-            <div className="group relative h-[350px] md:h-[400px] rounded-2xl bg-zinc-900/50 border border-white/10 overflow-hidden">
+            <div className="group relative h-[350px] md:h-[400px] rounded-2xl glass-panel overflow-hidden">
                  
                  <div className="absolute bottom-0 -left-10 w-[70%] h-[80%] z-10">
                     <img 
@@ -49,7 +49,7 @@ const AboutUs = ({ t }: { t: any }) => {
                  </div>
             </div>
 
-            <div className="group relative h-[350px] md:h-[400px] rounded-2xl bg-zinc-900/50 border border-white/10 overflow-hidden flex flex-col items-center">
+            <div className="group relative h-[350px] md:h-[400px] rounded-2xl glass-panel overflow-hidden flex flex-col items-center">
                  
                  <div className="w-full h-[55%] relative z-10 ">
                     <img 

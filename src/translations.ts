@@ -22,6 +22,8 @@ export const translations = {
     services: {
       title: "Services",
       wash: "Car Wash",
+      detailing: "Detailing",      
+      painting: "Car Painting",
     },
     contact: {
       background: "CONTACT",
@@ -65,6 +67,8 @@ export const translations = {
     services: {
       title: "Serviços",
       wash: "Lavagem Automóvel",
+      detailing: "Polimento",     
+      painting: "Pintura",
     },
     contact: {
       background: "CONTACTO",
