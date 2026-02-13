@@ -23,24 +23,22 @@ export const translations = {
       wash: "Car Wash",
       detailing: "Detailing",
       painting: "Car Painting",
-      
-      // New Sections
       diagnostics_title: "Diagnostics & Maintenance",
       repairs_title: "Heavy Repair",
       
       diagnostics_list: {
+        maintenance: "Maintenance",
         electronic: "Electronic Diagnostic",
         mechanical: "Mechanical Inspection",
-        alignment: "3D Wheel Alignment",
+        alignment: "Wheel Alignment",
         ac: "AC System Service",
-        maintenance: "Routine Maintenance",
       },
       repairs_list: {
-        gearbox: "Transmission (Gearbox) Overhaul",
+        gearbox: "Transmission Maintenance",
         engine: "Engine Rebuild & Repair",
         suspension: "Suspension & Steering",
-        brake: "Brake System Overhaul",
-        differential: "Differential Repair",
+        // brake: "Brake System Overhaul",
+        // differential: "Differential Repair",
       }
     },
     contact: {
@@ -78,7 +76,7 @@ export const translations = {
     about: {
       title: "Sobre Nós",
       years: "Anos no Mercado",
-      parts: "Importação de Peças de Todo o Mundo", // Combined for safety
+      parts: "Importação de Peças de Todo o Mundo", 
       clients: "Clientes Satisfeitos",
     },
     services: {
@@ -86,24 +84,22 @@ export const translations = {
       wash: "Lavagem Automóvel",
       detailing: "Polimento",
       painting: "Pintura",
-      
-      // New Sections
       diagnostics_title: "Diagnóstico e Manutenção",
       repairs_title: "Reparação Pesada",
 
       diagnostics_list: {
+        maintenance: "Manutenção",
         electronic: "Diagnóstico Eletrónico",
         mechanical: "Inspeção Mecânica",
-        alignment: "Alinhamento 3D",
+        alignment: "Alinhamento Direção",
         ac: "Serviço de AC",
-        maintenance: "Manutenção de Rotina",
       },
       repairs_list: {
-        gearbox: "Reparação de Caixa (Gearbox)",
+        gearbox: "Reparação de Caixa",
         engine: "Retificação de Motor",
         suspension: "Suspensão e Direção",
-        brake: "Sistema de Travões",
-        differential: "Reparação de Diferencial",
+        // brake: "Sistema de Travões",
+        // differential: "Reparação de Diferencial",
       }
     },
     contact: {
