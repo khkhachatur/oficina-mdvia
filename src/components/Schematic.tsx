@@ -8,152 +8,188 @@ const Schematic = ({ t }: { t: any }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // 1. SAFE DATA EXTRACTION
+  // This handles whether you passed the full 't' object OR just 't.services'
+  const servicesData = t?.services || t; 
+  
+  const diagList = servicesData?.diagnostics_list 
+    ? Object.values(servicesData.diagnostics_list) 
+    : ["Diagnostic Check", "Mechanical", "Systems", "Alignment", "AC"]; // Fallback text
+
+  const repairList = servicesData?.repairs_list 
+    ? Object.values(servicesData.repairs_list) 
+    : ["Gearbox", "Engine", "Suspension"]; // Fallback text
+
+  const repairTitle = servicesData?.repairs_title || "Heavy Repair";
+
+  // TIMINGS (Seconds)
+  const repairTimings = [0, 3, 5]; 
+
   useLayoutEffect(() => {
+    // Safety check: Don't run animation if ref is missing
+    if (!containerRef.current) return;
+
     const ctx = gsap.context(() => {
       
       const video = videoRef.current;
+      // Scoped selectors ensure we only grab items inside THIS component
+      const diagItems = gsap.utils.toArray('.diag-item');
+      const repairItems = gsap.utils.toArray('.repair-item');
+
+      // RESET STATE (Ensure they start hidden, except the first one handled by logic)
+      gsap.set(diagItems, { autoAlpha: 0, x: -50 });
+      gsap.set(repairItems, { autoAlpha: 0, x: -50 });
       
-      // 1. MASTER TIMELINE (Pins the section)
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=4000", // Very long scroll for 3 phases
+          end: "+=5000",
           scrub: 1,
           pin: true,
           anticipatePin: 1,
         }
       });
 
-      // --- PHASE 1: DIAGNOSTICS TEXT CYCLE (Right Side) ---
-      // We cycle through the first 3 diagnostic items while car is static
-      const diagItems = gsap.utils.toArray('.diag-item');
-      
-      // Hide all except first initially
-      gsap.set(diagItems, { autoAlpha: 0, x: 20 });
-      gsap.set(diagItems[0], { autoAlpha: 1, x: 0 });
+      // --- PHASE 1: DIAGNOSTICS ---
+      if (diagItems.length > 0) {
+        // Force first item visible immediately
+        gsap.set(diagItems[0], { autoAlpha: 1, x: 0 });
 
-      diagItems.forEach((item: any, i) => {
-        if (i === 0) return;
-        tl.to(diagItems[i-1], { autoAlpha: 0, x: -10, duration: 1 }) // Fade out prev
-          .to(item, { autoAlpha: 1, x: 0, duration: 1 });            // Fade in current
-      });
-      
-      // Fade out the last diagnostic item before split
-      tl.to(diagItems[diagItems.length - 1], { autoAlpha: 0, x: -10, duration: 1 });
-
-
-      // --- PHASE 2: THE SPLIT (Opening the Car) ---
-      tl.addLabel("split")
-        .to(".left-half", { xPercent: -40, duration: 3, ease: "power2.inOut" }, "split")
-        .to(".right-half", { xPercent: 40, duration: 3, ease: "power2.inOut" }, "split")
+        diagItems.forEach((item: any, i) => {
+          if (i === 0) return;
+          tl.to(diagItems[i-1], { autoAlpha: 0, y: -30, duration: 1, ease: "power2.in" }) 
+            .fromTo(item, { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 1, ease: "power2.out" });            
+        });
         
-        // Reveal Video Opacity slightly before split ends
+        // Fade out last diagnostic item
+        tl.to(diagItems[diagItems.length - 1], { autoAlpha: 0, y: -30, duration: 0.5 });
+      }
+
+      // --- PHASE 2: SPLIT ---
+      tl.addLabel("split");
+      tl.to(".car-top", { y: -200, duration: 2, ease: "power2.inOut" }, "split")
+        .to(".car-bottom", { y: 200, duration: 2, ease: "power2.inOut" }, "split")
         .fromTo(".video-layer", { opacity: 0 }, { opacity: 1, duration: 1 }, "split+=0.5");
 
+      // --- PHASE 3: REPAIR SYNC ---
+      tl.addLabel("repairStart");
 
-      // --- PHASE 3: VIDEO SCRUB & REPAIR LIST ---
-      // As we continue scrolling, we play the video and show the heavy repair list
-      tl.addLabel("repair")
-        .to(".repair-list", { autoAlpha: 1, x: 0, duration: 1 }, "repair")
-        
-        // This dummy tween drives the video scrubbing
-        .to(video, { 
-          currentTime: video?.duration || 5, // Scrub to end of video
-          duration: 5, 
-          ease: "none" 
-        }, "repair");
+      const videoDuration = 8; 
+      
+      tl.to(video, { 
+        currentTime: video?.duration || videoDuration,
+        duration: videoDuration, 
+        ease: "none" 
+      }, "repairStart");
 
-    }, containerRef);
+      if (repairItems.length > 0) {
+        repairItems.forEach((item: any, i) => {
+            const startTime = repairTimings[i] !== undefined ? repairTimings[i] : (i * 2);
+            const insertionTime = "repairStart+=" + startTime;
+            
+            // Fade In
+            tl.to(item, { autoAlpha: 1, x: 0, duration: 0.5 }, insertionTime);
+            
+            // Fade Out
+            if (i < repairItems.length - 1) {
+                 const nextStartTime = repairTimings[i+1] !== undefined ? repairTimings[i+1] : videoDuration;
+                 const durationVisible = nextStartTime - startTime;
+                 tl.to(item, { autoAlpha: 0, x: 50, duration: 2.5 }, insertionTime + "+" + (durationVisible + 2));
+            }
+        });
+      }
+
+    }, containerRef); // Scope to container
 
     return () => ctx.revert();
-  }, []);
+  }, [servicesData]); // Re-run if data changes
 
   return (
-    <section ref={containerRef} className="relative h-screen w-full bg-zinc-950 overflow-hidden flex flex-col items-center justify-center">
+    <section ref={containerRef} className="relative h-screen w-full bg-black overflow-hidden flex flex-col items-center justify-center">
       
-      {/* BACKGROUND GRID (Optional aesthetic) */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+      {/* Background Mask */}
+      <div 
+        className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none"
+        style={{
+            maskImage: 'linear-gradient(to right, black 0%, transparent 60%)',
+            WebkitMaskImage: 'linear-gradient(to right, black 0%, transparent 60%)'
+        }}
+      ></div>
 
-      <div className="relative z-10 w-full max-w-[1400px] h-full flex items-center justify-center px-4 md:px-10">
+      <div className="relative z-10 w-full max-w-[1600px] h-full flex items-center justify-center px-4 md:px-10">
         
-        {/* =========================================
-            CENTER: THE SPLIT CAR & VIDEO 
-        ========================================= */}
-        <div className="relative w-full md:w-3/5 h-[60vh] md:h-[80vh] flex items-center justify-center">
+        {/* ================= LABELS (High Z-Index) ================= */}
+        <div className="absolute left-8 md:left-24 top-1/2 -translate-y-1/2 w-[300px] md:w-[500px] text-left pointer-events-none z-[100]">
             
-            {/* 1. VIDEO LAYER (Underneath) */}
+            {/* DIAGNOSTICS */}
+            <div className="relative h-[250px] flex items-center">
+                {diagList.map((text: any, i: number) => (
+                    <div 
+                      key={`diag-${i}`} 
+                      className="diag-item absolute top-0 left-0 w-full"
+                      // Force first item visible via Tailwind just in case JS lags
+                      style={{ opacity: i === 0 ? 1 : 0 }} 
+                    >
+                        <span className="text-8xl font-black text-amber-400/10 absolute -top-10 -left-6 -z-10 select-none">
+                          0{i + 1}
+                        </span>
+                        <h3 className="text-4xl md:text-6xl font-bold text-amber-400 mb-4 drop-shadow-xl leading-tight uppercase">
+                            {text}
+                        </h3>
+                        <div className="w-16 h-1 bg-white/20 rounded-full"></div>
+                    </div>
+                ))}
+            </div>
+
+            {/* REPAIRS */}
+            <div className="relative h-[250px] -mt-[250px] flex items-center"> 
+                {repairList.map((text: any, i: number) => (
+                    <div key={`repair-${i}`} className="repair-item absolute top-0 left-0 w-full opacity-0">
+                        <span className="text-8xl font-black text-white/5 absolute -top-10 -left-6 -z-10 select-none">
+                          0{i + 1}
+                        </span>
+                        <h3 className="text-4xl md:text-6xl font-black text-white mb-4 drop-shadow-2xl leading-none uppercase tracking-tighter">
+                            {text}
+                        </h3>
+                        <p className="text-amber-400 font-bold tracking-widest uppercase text-sm">
+                           {repairTitle}
+                        </p>
+                    </div>
+                ))}
+            </div>
+        </div>
+
+        {/* ================= CAR & VIDEO ================= */}
+        <div className="relative w-full md:w-3/5 h-[60vh] md:h-[80vh] md:ml-auto flex items-center justify-center">
+            
+            {/* Video Layer */}
             <div className="video-layer absolute inset-0 flex items-center justify-center opacity-0 z-0">
                <video 
                   ref={videoRef}
                   src="/videos/land300-schematic.mp4" 
-                  className="w-[80%] h-full object-contain"
+                  className="w-[95%] h-full object-contain mix-blend-screen"
                   muted playsInline preload="auto"
                />
             </div>
 
-            {/* 2. LEFT HALF (Clipped) */}
-            <div className="left-half absolute inset-0 z-10 w-full h-full pointer-events-none">
-               <img 
-                  src="/images/land300-top.png" // MAKE SURE YOU HAVE THIS IMAGE
-                  alt="Car Left" 
-                  className="w-full h-full object-contain"
-                  style={{ clipPath: 'inset(0 50% 0 0)' }} // Shows only left side
-               />
-            </div>
-
-            {/* 3. RIGHT HALF (Clipped) */}
-            <div className="right-half absolute inset-0 z-10 w-full h-full pointer-events-none">
-               <img 
-                  src="/images/land300-top.png" 
-                  alt="Car Right" 
-                  className="w-full h-full object-contain"
-                  style={{ clipPath: 'inset(0 0 0 50%)' }} // Shows only right side
-               />
-            </div>
-        </div>
-
-
-        {/* =========================================
-            RIGHT SIDE: TEXT CONTENT
-        ========================================= */}
-        <div className="absolute right-4 md:right-20 top-1/2 -translate-y-1/2 w-[300px] md:w-[400px] text-right pointer-events-none z-20">
-            
-            {/* CONTAINER 1: DIAGNOSTICS (Cycle Items) */}
-            <div className="relative h-[200px]">
-                {/* Item 1 */}
-                <div className="diag-item absolute top-0 right-0 w-full">
-                    <h3 className="text-3xl md:text-5xl font-bold text-amber-400 mb-2">01</h3>
-                    <h4 className="text-xl md:text-3xl font-bold text-white uppercase">{t?.services?.diagnostics_list?.electronic}</h4>
-                    <p className="text-gray-400 mt-2">Full system scan using latest OBD-II tools.</p>
+            {/* Car Split Layer */}
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
+                <div className="car-top w-full flex items-end justify-center -mb-[1px]">
+                   <img 
+                      src="/images/land300-top.png" 
+                      alt="Car Top Half" 
+                      className="w-full object-contain max-h-[40vh]"
+                   />
                 </div>
-                {/* Item 2 */}
-                <div className="diag-item absolute top-0 right-0 w-full opacity-0">
-                    <h3 className="text-3xl md:text-5xl font-bold text-amber-400 mb-2">02</h3>
-                    <h4 className="text-xl md:text-3xl font-bold text-white uppercase">{t?.services?.diagnostics_list?.mechanical}</h4>
-                    <p className="text-gray-400 mt-2">Comprehensive engine and chassis check.</p>
-                </div>
-                {/* Item 3 */}
-                <div className="diag-item absolute top-0 right-0 w-full opacity-0">
-                    <h3 className="text-3xl md:text-5xl font-bold text-amber-400 mb-2">03</h3>
-                    <h4 className="text-xl md:text-3xl font-bold text-white uppercase">{t?.services?.diagnostics_list?.alignment}</h4>
-                    <p className="text-gray-400 mt-2">Laser precision 3D wheel alignment.</p>
+                <div className="car-bottom w-full flex items-start justify-center -mt-[1px]">
+                   <img 
+                      src="/images/land300-bottom.png" 
+                      alt="Car Bottom Half" 
+                      className="w-full object-contain max-h-[40vh]"
+                   />
                 </div>
             </div>
-
-            {/* CONTAINER 2: REPAIR LIST (Appears after split) */}
-            <div className="repair-list absolute top-0 right-0 w-full opacity-0 invisible translate-y-10">
-                <h3 className="text-amber-400 text-lg font-bold tracking-widest uppercase mb-4 border-b border-amber-400/30 pb-2">
-                    {t?.services?.repairs_title}
-                </h3>
-                <ul className="space-y-4">
-                    <li className="text-white text-xl font-medium">{t?.services?.repairs_list?.gearbox}</li>
-                    <li className="text-white text-xl font-medium">{t?.services?.repairs_list?.engine}</li>
-                    <li className="text-white text-xl font-medium">{t?.services?.repairs_list?.suspension}</li>
-                    <li className="text-gray-400 text-sm mt-4 italic">Watching internal schematic...</li>
-                </ul>
-            </div>
-
         </div>
 
       </div>
