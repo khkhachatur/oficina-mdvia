@@ -98,20 +98,17 @@ const Contact = ({ t }: { t: any }) => {
 
   return (
     <>
-      {/* CHANGED: pt-20 on mobile, pt-30 on desktop to adjust spacing */}
+
       <section id="contact" className="relative z-10 pt-16 md:pt-30 pb-20 px-4 max-w-[1120px] mx-auto">
         
-        {/* CHANGED: Adjusted top position and font size for mobile text wrapping */}
         <div className="absolute left-0 top-0 md:-top-20 text-[80px] md:text-[200px] leading-none font-bold pointer-events-none select-none overflow-hidden w-full text-center z-0 bg-gradient-to-b from-white/20 to-transparent bg-clip-text text-transparent">
           {t.background}
         </div>
 
-        {/* CHANGED: Reduced gap on mobile (gap-6) vs desktop (gap-16) and added mt-10 to push it down over the BG text */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-16 relative z-10 mt-10 md:mt-0">
         
           <div className="flex flex-col justify-center">
             
-            {/* CHANGED: Wrapped headers in 'hidden md:flex' to completely remove them on mobile */}
             <div className="hidden md:flex flex-col">
               <div className="flex items-center gap-5 mb-6 px-4 py-2 rounded-full border border-white/20 w-max bg-white/5 backdrop-blur-sm">
                   <div className="p-2 rounded-full border border-white/20 bg-white/5">
@@ -152,7 +149,6 @@ const Contact = ({ t }: { t: any }) => {
           </div>
 
           <div className="w-full h-full flex flex-col justify-center">
-            {/* CHANGED: Reduced padding on mobile (p-5) vs desktop (p-8) */}
             <div className="glass-panel rounded-2xl p-5 md:p-8 w-full">
               
               <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
@@ -196,13 +192,13 @@ const Contact = ({ t }: { t: any }) => {
                     className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-3 md:py-4 text-sm focus:outline-none focus:border-amber-400 focus:bg-black/40 text-white placeholder-white/40 resize-none transition-all shadow-inner backdrop-blur-md"
                   />
                 </div>
-                <div className="flex items-start gap-3 mt-2 mb-4">
+               <div className="flex items-center gap-3 mt-2 mb-4">
                   <input 
                     type="checkbox" 
                     id="consent" 
                     name="consent"
                     required 
-                    className="mt-1 w-4 h-4 accent-amber-400 cursor-pointer rounded border-white/20 bg-black/20"
+                    className="w-4 h-4 flex-shrink-0 accent-amber-400 cursor-pointer rounded border-white/20 bg-black/20"
                   />
                   <label htmlFor="consent" className="text-xs text-gray-400 leading-tight cursor-pointer select-none">
                     {t?.form?.consent_text || "I agree to the "}
@@ -298,7 +294,6 @@ const ContactButton = ({ icon, label, sub, href, copyValue }: { icon: any, label
       href={href} 
       target="_blank" 
       rel="noopener noreferrer" 
-      // CHANGED: Slightly less padding on mobile (p-3 md:p-4)
       className="flex items-center justify-between p-3 md:p-4 rounded-xl bg-zinc-900/40 glass-panel hover:border-amber-400/50 hover:bg-zinc-900/60 transition-all group cursor-pointer backdrop-blur-md shadow-lg hover:shadow-amber-900/10"
     >
       <div className="flex items-center gap-3 md:gap-4">
@@ -349,7 +344,6 @@ const Input = ({
     value={value}
     onChange={onChange}
     required={required}
-    // CHANGED: Slightly less padding on mobile (py-3 md:py-4)
     className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-3 md:py-4 text-sm focus:outline-none focus:border-amber-400 focus:bg-black/40 text-white placeholder-white/40 transition-all shadow-inner backdrop-blur-md"
   />
 );
