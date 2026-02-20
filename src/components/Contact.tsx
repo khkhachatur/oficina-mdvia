@@ -39,24 +39,17 @@ const Contact = ({ t }: { t: any }) => {
     setIsSubmitting(true);
     setShowError(false);
     
-    // Generate the email HTML using your templates
     const teamEmailHTML = generateTeamEmail(formData);
     const clientEmailHTML = generateClientEmail(formData, t);
 
-    // Pull keys from your .env file
-    // Note: If you are using Create React App instead of Vite, 
-    // change import.meta.env.VITE_... to process.env.REACT_APP_...
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
     const teamTemplateId = import.meta.env.VITE_EMAILJS_TEAM_TEMPLATE_ID;
     const clientTemplateId = import.meta.env.VITE_EMAILJS_CLIENT_TEMPLATE_ID;
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-    
     try {
-
       const sheetUrl = import.meta.env.VITE_GOOGLE_SHEET_URL;
 
-      // 1. Send data to Google Sheets
       if (sheetUrl) {
         fetch(sheetUrl, {
           method: 'POST',
@@ -69,7 +62,6 @@ const Contact = ({ t }: { t: any }) => {
       }
 
       await Promise.all([
-        // 1. Send to Team
         emailjs.send(
           serviceId,
           teamTemplateId,
@@ -80,7 +72,6 @@ const Contact = ({ t }: { t: any }) => {
           publicKey
         ),
         
-        // 2. Send Auto-Reply to Client
         emailjs.send(
           serviceId,
           clientTemplateId,
@@ -92,7 +83,6 @@ const Contact = ({ t }: { t: any }) => {
         )
       ]);
 
-      // Success
       setIsSubmitting(false);
       setShowSuccess(true);
       setFormData({ name: '', email: '', phone: '', message: '' });
@@ -108,27 +98,36 @@ const Contact = ({ t }: { t: any }) => {
 
   return (
     <>
-      <section id="contact" className="relative z-10 pt-30 pb-20 px-4 max-w-[1120px] mx-auto">
-        <div className="absolute left-0 -top-20 text-[100px] md:text-[200px] font-bold pointer-events-none select-none overflow-hidden w-full text-center z-0 bg-gradient-to-b from-white/20 to-transparent bg-clip-text text-transparent">
+      {/* CHANGED: pt-20 on mobile, pt-30 on desktop to adjust spacing */}
+      <section id="contact" className="relative z-10 pt-16 md:pt-30 pb-20 px-4 max-w-[1120px] mx-auto">
+        
+        {/* CHANGED: Adjusted top position and font size for mobile text wrapping */}
+        <div className="absolute left-0 top-0 md:-top-20 text-[80px] md:text-[200px] leading-none font-bold pointer-events-none select-none overflow-hidden w-full text-center z-0 bg-gradient-to-b from-white/20 to-transparent bg-clip-text text-transparent">
           {t.background}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
+        {/* CHANGED: Reduced gap on mobile (gap-6) vs desktop (gap-16) and added mt-10 to push it down over the BG text */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-16 relative z-10 mt-10 md:mt-0">
         
           <div className="flex flex-col justify-center">
-            <div className="flex items-center gap-5 mb-6 px-4 py-2 rounded-full border border-white/20 w-max bg-white/5 backdrop-blur-sm">
-                <div className="p-2 rounded-full border border-white/20 bg-white/5">
-                  <img src="/icons/contact.svg" alt="Contact Icon" className="w-4 h-4" />  
-                </div>
-                <span className="text-[16px] font-medium pr-2 text-white">{t.label}</span>
-            </div>
             
-            <h2 className="text-4xl font-bold mb-4 text-white">{t.title}</h2>
-            <p className="text-gray-400 mb-8 max-w-sm text-lg">
-              {t.subtitle}
-            </p>
+            {/* CHANGED: Wrapped headers in 'hidden md:flex' to completely remove them on mobile */}
+            <div className="hidden md:flex flex-col">
+              <div className="flex items-center gap-5 mb-6 px-4 py-2 rounded-full border border-white/20 w-max bg-white/5 backdrop-blur-sm">
+                  <div className="p-2 rounded-full border border-white/20 bg-white/5">
+                    <img src="/icons/contact.svg" alt="Contact Icon" className="w-4 h-4" />  
+                  </div>
+                  <span className="text-[16px] font-medium pr-2 text-white">{t.label}</span>
+              </div>
+              
+              <h2 className="text-4xl font-bold mb-4 text-white">{t.title}</h2>
+              <p className="text-gray-400 mb-8 max-w-sm text-lg">
+                {t.subtitle}
+              </p>
+            </div>
 
-            <div className="space-y-4">
+            {/* Buttons stay visible on both */}
+            <div className="space-y-3 md:space-y-4">
               <ContactButton 
                 icon={<Mail size={20}/>} 
                 label={t.buttons.email} 
@@ -153,9 +152,10 @@ const Contact = ({ t }: { t: any }) => {
           </div>
 
           <div className="w-full h-full flex flex-col justify-center">
-            <div className="glass-panel rounded-2xl p-8 w-full">
+            {/* CHANGED: Reduced padding on mobile (p-5) vs desktop (p-8) */}
+            <div className="glass-panel rounded-2xl p-5 md:p-8 w-full">
               
-              <form className="space-y-4" onSubmit={handleSubmit}>
+              <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
                 <div className="space-y-1">
                   <Input 
                     name="name"
@@ -193,7 +193,7 @@ const Contact = ({ t }: { t: any }) => {
                     value={formData.message}
                     onChange={handleChange}
                     required
-                    className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-4 text-sm focus:outline-none focus:border-amber-400 focus:bg-black/40 text-white placeholder-white/40 resize-none transition-all shadow-inner backdrop-blur-md"
+                    className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-3 md:py-4 text-sm focus:outline-none focus:border-amber-400 focus:bg-black/40 text-white placeholder-white/40 resize-none transition-all shadow-inner backdrop-blur-md"
                   />
                 </div>
                 <div className="flex items-start gap-3 mt-2 mb-4">
@@ -220,7 +220,7 @@ const Contact = ({ t }: { t: any }) => {
                   ref={btnRef}
                   onMouseMove={handleMouseMove}
                   disabled={isSubmitting}
-                  className={`group relative w-full overflow-hidden font-bold py-4 rounded-full transition-all mt-4 uppercase tracking-widest duration-300 ${
+                  className={`group relative w-full overflow-hidden font-bold py-3 md:py-4 rounded-full transition-all mt-4 uppercase tracking-widest duration-300 ${
                     isSubmitting 
                       ? 'bg-amber-400/50 text-black/50 cursor-not-allowed' 
                       : 'bg-amber-400 text-black shadow-[0_0_20px_rgba(251,191,36,0.4)] hover:shadow-[0_0_35px_rgba(251,191,36,0.6)] hover:scale-[1.02] active:scale-[0.98]'
@@ -251,19 +251,13 @@ const Contact = ({ t }: { t: any }) => {
           </div>
         </div>
 
-        <div className="flex justify-center mt-16">
+        <div className="flex justify-center mt-12 md:mt-16">
             <Socials />
         </div>
       </section>
 
       {/* SUCCESS POPUP TOAST */}
-      <div 
-        className={`fixed bottom-8 right-8 z-[100] flex items-center gap-3 px-6 py-4 rounded-xl border border-green-500/30 bg-zinc-900/90 backdrop-blur-md shadow-2xl transition-all duration-500 ${
-          showSuccess 
-            ? 'translate-y-0 opacity-100' 
-            : 'translate-y-12 opacity-0 pointer-events-none'
-        }`}
-      >
+      <div className={`fixed bottom-8 right-8 z-[100] flex items-center gap-3 px-6 py-4 rounded-xl border border-green-500/30 bg-zinc-900/90 backdrop-blur-md shadow-2xl transition-all duration-500 ${showSuccess ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0 pointer-events-none'}`}>
         <div className="p-1 rounded-full bg-green-500/20 text-green-400">
           <CheckCircle size={20} />
         </div>
@@ -274,13 +268,7 @@ const Contact = ({ t }: { t: any }) => {
       </div>
 
       {/* ERROR POPUP TOAST */}
-      <div 
-        className={`fixed bottom-8 right-8 z-[100] flex items-center gap-3 px-6 py-4 rounded-xl border border-red-500/30 bg-zinc-900/90 backdrop-blur-md shadow-2xl transition-all duration-500 ${
-          showError 
-            ? 'translate-y-0 opacity-100' 
-            : 'translate-y-12 opacity-0 pointer-events-none'
-        }`}
-      >
+      <div className={`fixed bottom-8 right-8 z-[100] flex items-center gap-3 px-6 py-4 rounded-xl border border-red-500/30 bg-zinc-900/90 backdrop-blur-md shadow-2xl transition-all duration-500 ${showError ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0 pointer-events-none'}`}>
         <div className="p-1 rounded-full bg-red-500/20 text-red-400">
           <CheckCircle size={20} />
         </div>
@@ -310,16 +298,17 @@ const ContactButton = ({ icon, label, sub, href, copyValue }: { icon: any, label
       href={href} 
       target="_blank" 
       rel="noopener noreferrer" 
-      className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/40 glass-panel hover:border-amber-400/50 hover:bg-zinc-900/60 transition-all group cursor-pointer backdrop-blur-md shadow-lg hover:shadow-amber-900/10"
+      // CHANGED: Slightly less padding on mobile (p-3 md:p-4)
+      className="flex items-center justify-between p-3 md:p-4 rounded-xl bg-zinc-900/40 glass-panel hover:border-amber-400/50 hover:bg-zinc-900/60 transition-all group cursor-pointer backdrop-blur-md shadow-lg hover:shadow-amber-900/10"
     >
-      <div className="flex items-center gap-4">
-        <div className="p-3 bg-white/5 rounded-lg text-gray-300 group-hover:text-white group-hover:bg-zinc-700 transition-colors glass-panel">
+      <div className="flex items-center gap-3 md:gap-4">
+        <div className="p-2 md:p-3 bg-white/5 rounded-lg text-gray-300 group-hover:text-white group-hover:bg-zinc-700 transition-colors glass-panel">
           {icon}
         </div>
         <div className="flex flex-col text-left">
-          <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">{label}</span>
+          <span className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-wider">{label}</span>
           <div className="flex items-center gap-2 mt-0.5">
-            <span className="text-sm text-white font-medium">{sub}</span>
+            <span className="text-xs md:text-sm text-white font-medium">{sub}</span>
             {copyValue && (
               <button 
                 onClick={handleCopy} 
@@ -331,7 +320,7 @@ const ContactButton = ({ icon, label, sub, href, copyValue }: { icon: any, label
           </div>
         </div>
       </div>
-      <div className="p-2 rounded-full bg-white/5 group-hover:bg-amber-400 group-hover:text-black transition-all transform group-hover:-translate-y-1 group-hover:translate-x-1">
+      <div className="p-2 rounded-full bg-white/5 group-hover:bg-amber-400 group-hover:text-black transition-all transform group-hover:-translate-y-1 group-hover:translate-x-1 hidden sm:block">
         <ArrowUpRight size={18} />
       </div>
     </a>
@@ -360,7 +349,8 @@ const Input = ({
     value={value}
     onChange={onChange}
     required={required}
-    className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-4 text-sm focus:outline-none focus:border-amber-400 focus:bg-black/40 text-white placeholder-white/40 transition-all shadow-inner backdrop-blur-md"
+    // CHANGED: Slightly less padding on mobile (py-3 md:py-4)
+    className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-3 md:py-4 text-sm focus:outline-none focus:border-amber-400 focus:bg-black/40 text-white placeholder-white/40 transition-all shadow-inner backdrop-blur-md"
   />
 );
 
