@@ -22,7 +22,8 @@ const Hero = ({ t }: { t: any }) => {
               alt="Porsche 911 hero image" 
               loading="eager"
               decoding="async"
-              className="w-full h-full object-cover object-center opacity-80" 
+
+              className="w-full h-full object-cover object-[30%_center] md:object-center opacity-80" 
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90" />
             <div className="absolute top-[-50%] left-1/2 -translate-x-1/2 w-[65vw] h-[65vh] bg-amber-500/20 blur-[120px] rounded-full mix-blend-screen" />
@@ -35,8 +36,9 @@ const Hero = ({ t }: { t: any }) => {
                 </h1>
             </div>
 
-            <div className="flex flex-col items-center gap-6 mb-10">
-                <p className="text-gray-100 text-sm md:text-base tracking-[0.2em] font-semibold uppercase drop-shadow-md">
+            <div className="flex flex-col items-center gap-6 mb-10 w-full">
+                {/* CHANGED: text-base for mobile, added text-center and max-w to force clean wrapping */}
+                <p className="text-gray-100 text-base md:text-lg tracking-[0.15em] md:tracking-[0.2em] font-bold uppercase drop-shadow-md text-center max-w-[300px] md:max-w-none px-4">
                     {t.subtitle}
                 </p>
 

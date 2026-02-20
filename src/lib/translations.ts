@@ -57,7 +57,10 @@ export const translations = {
         phone: "Number",
         message: "Message",
         submit: "Submit",
+        consent_text: "I agree to the ",
+        consent_link: "Privacy Policy",
       },
+      
     },
   },
   pt: {
@@ -118,6 +121,8 @@ export const translations = {
         phone: "Número",
         message: "Mensagem",
         submit: "Enviar",
+        consent_text: "Concordo com a ", 
+        consent_link: "Política de Privacidade",
       },
     },
   },
