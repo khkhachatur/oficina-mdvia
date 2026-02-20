@@ -51,8 +51,23 @@ const Contact = ({ t }: { t: any }) => {
     const clientTemplateId = import.meta.env.VITE_EMAILJS_CLIENT_TEMPLATE_ID;
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
+    
     try {
-      // Send BOTH emails at the same time
+
+      const sheetUrl = import.meta.env.VITE_GOOGLE_SHEET_URL;
+
+      // 1. Send data to Google Sheets
+      if (sheetUrl) {
+        fetch(sheetUrl, {
+          method: 'POST',
+          mode: 'no-cors', 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        }).catch(err => console.error("Sheet error:", err));
+      }
+
       await Promise.all([
         // 1. Send to Team
         emailjs.send(
@@ -181,7 +196,26 @@ const Contact = ({ t }: { t: any }) => {
                     className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-4 text-sm focus:outline-none focus:border-amber-400 focus:bg-black/40 text-white placeholder-white/40 resize-none transition-all shadow-inner backdrop-blur-md"
                   />
                 </div>
-                
+                <div className="flex items-start gap-3 mt-2 mb-4">
+                  <input 
+                    type="checkbox" 
+                    id="consent" 
+                    name="consent"
+                    required 
+                    className="mt-1 w-4 h-4 accent-amber-400 cursor-pointer rounded border-white/20 bg-black/20"
+                  />
+                  <label htmlFor="consent" className="text-xs text-gray-400 leading-tight cursor-pointer select-none">
+                    {t?.form?.consent_text || "I agree to the "}
+                    <a 
+                      href="/privacy" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-amber-400 hover:text-amber-300 hover:underline transition-colors"
+                    >
+                      {t?.form?.consent_link || "Privacy Policy"}
+                    </a>
+                  </label>
+                </div>
                 <button
                   ref={btnRef}
                   onMouseMove={handleMouseMove}
