@@ -9,7 +9,6 @@ const Schematic = ({ t }: { t: any }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // 1. SAFE DATA EXTRACTION
-  // This handles whether you passed the full 't' object OR just 't.services'
   const servicesData = t?.services || t; 
   
   const diagList = servicesData?.diagnostics_list 
