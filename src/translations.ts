@@ -15,7 +15,7 @@ export const translations = {
     about: {
       title: "About Us",
       years: "Years On Market",
-      parts: "Parts Import From All Around The World", // Combined for safety
+      parts: "Parts Import From All Around The World", 
       clients: "Satisfied Clients",
     },
     services: {
