@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Phone, Mail, MapPin, ArrowUpRight } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Phone, Mail, MapPin, ArrowUpRight, Copy, Check } from 'lucide-react';
 import Socials from './Social';
 
 const Contact = ({ t }: { t: any }) => {
@@ -15,10 +15,10 @@ const Contact = ({ t }: { t: any }) => {
   };
 
   return (
-    <section id="contact" className="relative z-10 pt-20 pb-20 px-4 max-w-[1120px] mx-auto">
-        <div className="absolute left-0 -top-10 text-[100px] md:text-[200px] font-bold text-white/5 pointer-events-none select-none overflow-hidden w-full text-center z-0">
-          {t.background}
-        </div>
+    <section id="contact" className="relative z-10 pt-30 pb-20 px-4 max-w-[1120px] mx-auto">
+       <div className="absolute left-0 -top-20 text-[100px] md:text-[200px] font-bold pointer-events-none select-none overflow-hidden w-full text-center z-0 bg-gradient-to-b from-white/20 to-transparent bg-clip-text text-transparent">
+        {t.background}
+      </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 relative z-10">
         
@@ -36,9 +36,26 @@ const Contact = ({ t }: { t: any }) => {
             </p>
 
             <div className="space-y-4">
-              <ContactButton icon={<Mail size={20}/>} label={t.buttons.email} sub="oficina@mdvia.net" />
-              <ContactButton icon={<Phone size={20}/>} label={t.buttons.call} sub="+244 939 800 778" />
-              <ContactButton icon={<MapPin size={20}/>} label={t.buttons.location} sub="Rua Direita do BFA Futungo de Belas, Luanda" />
+              <ContactButton 
+                icon={<Mail size={20}/>} 
+                label={t.buttons.email} 
+                sub="oficina@mdvia.net" 
+                copyValue="oficina@mdvia.net"
+                href="mailto:oficina@mdvia.net"
+              />
+              <ContactButton 
+                icon={<Phone size={20}/>} 
+                label={t.buttons.call} 
+                sub="+244 939 800 778" 
+                copyValue="+244 939 800 778"
+                href="tel:+244939800778"
+              />
+              <ContactButton 
+                icon={<MapPin size={20}/>} 
+                label={t.buttons.location} 
+                sub="Rua Direita do BFA Futungo de Belas, Luanda" 
+                href="https://maps.google.com/?q=Rua+Direita+do+BFA+Futungo+de+Belas,+Luanda"
+              />
             </div>
           </div>
 
@@ -91,22 +108,50 @@ const Contact = ({ t }: { t: any }) => {
   )
 }
 
-const ContactButton = ({ icon, label, sub }: { icon: any, label: string, sub: string }) => (
-  <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/40 glass-panel hover:border-amber-400/50 hover:bg-zinc-900/60 transition-all group cursor-pointer backdrop-blur-md shadow-lg hover:shadow-amber-900/10">
-    <div className="flex items-center gap-4">
-      <div className="p-3 bg-white/5 rounded-lg text-gray-300 group-hover:text-white group-hover:bg-zinc-700 transition-colors glass-panel">
-        {icon}
+const ContactButton = ({ icon, label, sub, href, copyValue }: { icon: any, label: string, sub: string, href: string, copyValue?: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (copyValue) {
+      navigator.clipboard.writeText(copyValue);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  return (
+    <a 
+      href={href} 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      className="flex items-center justify-between p-4 rounded-xl bg-zinc-900/40 glass-panel hover:border-amber-400/50 hover:bg-zinc-900/60 transition-all group cursor-pointer backdrop-blur-md shadow-lg hover:shadow-amber-900/10"
+    >
+      <div className="flex items-center gap-4">
+        <div className="p-3 bg-white/5 rounded-lg text-gray-300 group-hover:text-white group-hover:bg-zinc-700 transition-colors glass-panel">
+          {icon}
+        </div>
+        <div className="flex flex-col text-left">
+          <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">{label}</span>
+          <div className="flex items-center gap-2 mt-0.5">
+            <span className="text-sm text-white font-medium">{sub}</span>
+            {copyValue && (
+              <button 
+                onClick={handleCopy} 
+                className="p-1.5 rounded-md hover:bg-white/10 text-gray-400 hover:text-white transition-colors flex items-center justify-center"
+              >
+                {copied ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
+              </button>
+            )}
+          </div>
+        </div>
       </div>
-      <div className="flex flex-col text-left">
-        <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">{label}</span>
-        <span className="text-sm text-white font-medium">{sub}</span>
+      <div className="p-2 rounded-full bg-white/5 group-hover:bg-amber-400 group-hover:text-black transition-all transform group-hover:-translate-y-1 group-hover:translate-x-1">
+        <ArrowUpRight size={18} />
       </div>
-    </div>
-    <div className="p-2 rounded-full bg-white/5 group-hover:bg-amber-400 group-hover:text-black transition-all transform group-hover:-translate-y-1 group-hover:translate-x-1">
-      <ArrowUpRight size={18} />
-    </div>
-  </div>
-);
+    </a>
+  );
+};
 
 const Input = ({ placeholder, type = "text" }: { placeholder: string, type?: string }) => (
   <input 
