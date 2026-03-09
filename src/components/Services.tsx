@@ -1,4 +1,5 @@
-import React, { useLayoutEffect, useRef } from 'react';
+
+import { useRef, useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Titles from './Titles';
@@ -13,10 +14,10 @@ const Services = ({ t }: { t: any }) => {
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
 
-      const frames = gsap.utils.toArray('.service-frame');
+      const yourItems = gsap.utils.toArray<HTMLElement>('.your-class-name');
 
-      gsap.set(frames, { autoAlpha: 0 });
-      gsap.set(frames[0], { autoAlpha: 1 });
+      gsap.set(yourItems, { autoAlpha: 0 });
+      gsap.set(yourItems[0], { autoAlpha: 1 });
 
       const tl = gsap.timeline({
         scrollTrigger: {    

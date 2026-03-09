@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 
 const Privacy = ({ currentLang }: { currentLang: string }) => {
@@ -8,7 +7,6 @@ const Privacy = ({ currentLang }: { currentLang: string }) => {
     <div className="min-h-screen bg-black text-gray-300 py-20 px-4 md:px-10">
       <div className="max-w-[800px] mx-auto glass-panel p-8 md:p-12 rounded-3xl relative">
         
-        {/* Back Button */}
         <a 
           href="/" 
           className="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 mb-8 transition-colors font-medium"

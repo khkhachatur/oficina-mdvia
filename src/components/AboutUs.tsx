@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import { useState, useEffect } from 'react';
 import Titles from "./Titles";
 import { Play, Pause } from 'lucide-react';
 
@@ -6,13 +7,12 @@ const AboutUs = ({ t }: { t: any }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
 
-  // Auto-play slider logic
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+  let interval: ReturnType<typeof setInterval>;
     if (isPlaying) {
       interval = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % 3);
-      }, 3000); // Changes slide every 3 seconds
+      }, 3000); 
     }
     return () => clearInterval(interval);
   }, [isPlaying]);
@@ -21,9 +21,6 @@ const AboutUs = ({ t }: { t: any }) => {
     <section id="about" className="relative z-10 py-20 px-4 max-w-[1120px] mx-auto">
         <Titles title={t?.title || "About Us"} />
         
-        {/* ========================================== */}
-        {/* DESKTOP VERSION (Untouched, hidden on mobile) */}
-        {/* ========================================== */}
         <div className="hidden md:flex flex-col gap-10">
           
           <div className="group relative w-full h-[400px] rounded-2xl glass-panel overflow-hidden">
@@ -81,12 +78,8 @@ const AboutUs = ({ t }: { t: any }) => {
           </div>
         </div>
 
-        {/* ========================================== */}
-        {/* MOBILE VERSION (Slider, hidden on desktop) */}
-        {/* ========================================== */}
         <div className="flex md:hidden flex-col items-center w-full">
           
-          {/* Slider Container */}
           <div className="relative w-full h-[380px] overflow-hidden rounded-2xl border border-white/5">
             <div 
               className="flex w-full h-full transition-transform duration-500 ease-in-out"
@@ -141,17 +134,14 @@ const AboutUs = ({ t }: { t: any }) => {
             </div>
           </div>
 
-          {/* Slider Controls */}
           <div className="flex items-center gap-4 mt-6">
             
-            {/* Dots Pill */}
             <div className="flex items-center gap-2 bg-white/5 border border-white/5 rounded-full px-4 py-3 shadow-inner">
               {[0, 1, 2].map((idx) => (
                 <button
                   key={idx}
                   onClick={() => {
                     setCurrentSlide(idx);
-                    setIsPlaying(false); // Pause auto-play if user manually clicks
                   }}
                   className={`transition-all duration-300 rounded-full ${
                     currentSlide === idx ? 'w-8 h-2 bg-white/30' : 'w-2 h-2 bg-white/10'
@@ -161,7 +151,6 @@ const AboutUs = ({ t }: { t: any }) => {
               ))}
             </div>
 
-            {/* Play/Pause Button */}
             <button 
               onClick={() => setIsPlaying(!isPlaying)}
               className="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/5 rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-colors shadow-inner"

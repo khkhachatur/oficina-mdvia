@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -28,11 +28,9 @@ const Schematic = ({ t }: { t: any }) => {
     const ctx = gsap.context(() => {
       
       const video = videoRef.current;
-      const diagItems = gsap.utils.toArray('.diag-item');
-      const repairItems = gsap.utils.toArray('.repair-item');
+      const diagItems = gsap.utils.toArray<HTMLElement>('.diag-item');
+const repairItems = gsap.utils.toArray<HTMLElement>('.repair-item');
 
-      // FIXED: Ensure x is always 0 so text-center works perfectly.
-      // Now everything slides smoothly up and down using 'y: 30'
       gsap.set(diagItems, { autoAlpha: 0, x: 0, y: 30 });
       gsap.set(repairItems, { autoAlpha: 0, x: 0, y: 30 });
       
